@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: microservice-sowings
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sowingsdb
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: com.chaquitaclla.microservice.products.shared.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseNameStrat
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  config:
+    import: optional:configserver:http://localhost:8888
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 8083
