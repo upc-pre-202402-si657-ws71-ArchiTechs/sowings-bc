@@ -2,10 +2,8 @@ spring:
   application:
     name: microservice-sowings
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sowingsdb
-    username: root
-    password: 1234
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://servidorbasedatosmicroservicios.database.windows.net:1433;database=sowingsbd;user=microservicios;password=123q321Q@;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,8 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database: sql_server
+    database-platform: org.hibernate.dialect.SQLServerDialect
   config:
     import: optional:configserver:http://localhost:8888
 
