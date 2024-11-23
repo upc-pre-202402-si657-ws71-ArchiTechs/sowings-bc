@@ -1,15 +1,19 @@
 package com.chaquitaclla.microservice.products.sowings.application.internal.queryservices;
 
 import com.chaquitaclla.microservice.products.sowings.client.CropClient;
+import com.chaquitaclla.microservice.products.sowings.client.ProfileClient;
 import com.chaquitaclla.microservice.products.sowings.domain.model.aggregates.Sowing;
 import com.chaquitaclla.microservice.products.sowings.domain.model.queries.GetAllSowingsQuery;
 import com.chaquitaclla.microservice.products.sowings.domain.model.queries.GetSowingByIdQuery;
 import com.chaquitaclla.microservice.products.sowings.domain.model.queries.GetSowingsByPhenologicalPhaseQuery;
 import com.chaquitaclla.microservice.products.sowings.domain.services.SowingQueryService;
 import com.chaquitaclla.microservice.products.sowings.dto.CropDTO;
+import com.chaquitaclla.microservice.products.sowings.dto.ProfileDTO;
 import com.chaquitaclla.microservice.products.sowings.http.response.CropByIdResponse;
+import com.chaquitaclla.microservice.products.sowings.http.response.ProfileByIdResponse;
 import com.chaquitaclla.microservice.products.sowings.infrastructure.persistence.jpa.repositories.SowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +26,8 @@ public class SowingQueryServiceImpl implements SowingQueryService {
 
     @Autowired
     private CropClient cropClient;
+    @Autowired
+    private ProfileClient profileClient;
 
     public SowingQueryServiceImpl(SowingRepository sowingRepository, CropClient cropClient) {
         this.sowingRepository = sowingRepository;
@@ -54,6 +60,17 @@ public class SowingQueryServiceImpl implements SowingQueryService {
                 .diseaseIds(cropDTO.getDiseaseIds())
                 .pestIds(cropDTO.getPestIds())
                 .careIds(cropDTO.getCareIds())
+                .build();
+    }
+
+    @Override
+    public ProfileByIdResponse findProfileById(Long id) {
+        ProfileDTO profileDTO = profileClient.findProfileById(id);
+        return ProfileByIdResponse.builder()
+                .id(profileDTO.getId())
+                .fullName(profileDTO.getFullName())
+                .email(profileDTO.getEmail())
+                .streetAddress(profileDTO.getStreetAddress())
                 .build();
     }
 

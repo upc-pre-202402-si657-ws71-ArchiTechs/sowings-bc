@@ -74,13 +74,13 @@ public class Sowing {
     protected Sowing() {
     }
 
-    public Sowing(CropId cropId, Integer areaLand) {
+    public Sowing(CropId cropId, Integer areaLand, ProfileId profileId) {
         LocalDate startDate = LocalDate.now();
         this.dateRange = new DateRange(startDate, 6);
         this.areaLand = areaLand;
         this.cropId = cropId;
         this.phenologicalPhase = PhenologicalPhase.GERMINATION;
-        this.profileId = new ProfileId(0L);
+        this.profileId = profileId;
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }

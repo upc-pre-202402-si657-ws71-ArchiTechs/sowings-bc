@@ -5,9 +5,11 @@ import com.chaquitaclla.microservice.products.sowings.domain.model.commands.Crea
 import com.chaquitaclla.microservice.products.sowings.domain.model.commands.DeleteSowingCommand;
 import com.chaquitaclla.microservice.products.sowings.domain.model.commands.UpdateSowingCommand;
 import com.chaquitaclla.microservice.products.sowings.domain.model.valueobjects.CropId;
+import com.chaquitaclla.microservice.products.sowings.domain.model.valueobjects.ProfileId;
 import com.chaquitaclla.microservice.products.sowings.domain.services.SowingCommandService;
 import com.chaquitaclla.microservice.products.sowings.domain.services.SowingQueryService;
 import com.chaquitaclla.microservice.products.sowings.http.response.CropByIdResponse;
+import com.chaquitaclla.microservice.products.sowings.http.response.ProfileByIdResponse;
 import com.chaquitaclla.microservice.products.sowings.infrastructure.persistence.jpa.repositories.SowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,13 +30,24 @@ public class SowingCommandServiceImpl implements SowingCommandService {
     @Override
     public Long handle(CreateSowingCommand command) {
         CropByIdResponse cropResponse = sowingQueryService.findCropById(Long.valueOf(command.cropId()));
+        ProfileByIdResponse profileResponse = sowingQueryService.findProfileById(command.profileId().profileId());
         if (cropResponse == null) {
             throw new IllegalArgumentException("The crop with the given ID does not exist.");
         }
+        if (profileResponse == null) {
+            throw new IllegalArgumentException("The profile with the given ID does not exist.");
+        }
 
         var cropId = new CropId(Long.valueOf(command.cropId()));
-        var sowing = new Sowing(cropId, command.areaLand());
-        sowingRepository.save(sowing);
+        var profileId = new ProfileId(profileResponse.getId());
+        var sowing = new Sowing(cropId, command.areaLand(), profileId);
+        try {
+            sowingRepository.save(sowing);
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("Error saving sowing");
+        }
+
         return sowing.getId();
     }
 
